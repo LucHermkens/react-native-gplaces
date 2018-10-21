@@ -1,6 +1,6 @@
 {
   "name": "react-native-gplaces",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React Native library for utilizing Google's Autocomplete for Places.",
   "main": "index.js",
   "keywords": [
@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/LucHermkens/react-native-gplaces#readme",
   "dependencies": {
-    "qs": "*",
-    "react-native": "*"
+    "qs": "^6.5.2",
+    "react-native": "^0.54"
   },
   "license": "MIT",
   "author": "Luc Hermkens"
