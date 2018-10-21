@@ -1,96 +1,6 @@
-# react-native-google-places
+import { Platform } from 'react-native'
+import Qs from 'qs'
 
-React Native library for utilizing Google's Autocomplete for Places.
-
-## Install
-
-### using npm
-
-```sh
-npm install --save react-native-google-places
-```
-
-### using yarn
-
-```sh
-yarn add rn-fetch-blob react-native-google-places
-```
-
-## Usage
-
-### ES6
-
-The module uses an ES6 style export statement, simply use `import` to load the module.
-
-```js
-import GooglePlaces from 'react-native-google-places';
-```
-
-### ES5
-
-If you're using an ES5 require statement to load the module, please add `default`. See [here](https://github.com/joltup/rn-fetch-blob/wiki/Trouble-Shooting#rnfetchblobfetch-is-not-a-function) for more detail.
-
-```js
-var GooglePlaces = require('react-native-google-places').default;
-```
-
-## Searching
-
-### Creating an instance
-
-This package supports custom queries if you'd like to use them.
-See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for more details.
-
-```js
-const places = new GooglePlaces({
-  key: 'YOUR_API_KEY',
-  query: {
-    components: 'country:nl|country:be',
-    types: '(cities)'
-  }
-});
-```
-
-### Search for places
-
-```js
-places.search(input) // input: 'eindhoven'
-  .then(r => {
-    // returns Result[]
-  })
-  .catch(console.error)
-```
-
-### Search for places nearby
-
-```js
-storage.searchNearby(input, radius) // input: 'eindhoven', radius: 1000
-  .then(r => {
-    // returns Result[]
-  })
-  .catch(console.error)
-```
-
-## API
-
-### `request(url: string): Promise<JSONResponse> (@private)`
-
-Calling this method will fetch an URL and return a JSON response
-
-### `search(input: string): Promise<Results>`
-
-Calling this method will search for places matching the input.
-
-### `searchNearby(input: string, radius: number): Promise<Results>`
-
-Calling this method will search for nearby places matching the input in a given radius.
-The default radius is 1000m / 1km.
-
-## Types
-
-See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for up-to-date information.
-
-```ts
 interface Query {
   sessiontoken: String; // A random string which identifies an autocomplete session for billing purposes. If this parameter is omitted from an autocomplete request, the request is billed independently. See the pricing sheet for details.
   offset: Number; // The position, in the input term, of the last character that the service uses to match predictions. For example, if the input is 'Google' and the offset is 3, the service will match on 'Goo'. The string determined by the offset is matched against the first word in the input term only. For example, if the input term is 'Google abc' and the offset is 3, the service will attempt to match against 'Goo abc'. If no offset is supplied, the service will use the whole term. The offset should generally be set to the position of the text caret.
@@ -110,20 +20,20 @@ interface MSubstring {
   length: Number; // length of substring in text
   offset: Number; // position of substring in text
 }
-type MSubstrings = Array<MSubstring>;
+type MSubstrings = Array<MSubstring>
 
 interface SFormat {
   main_text: String; // contains the main text of a prediction, usually the name of the place.
   main_text_matched_substrings: MSubstrings; // contains an array with offset value and length. These describe the location of the entered term in the prediction result text, so that the term can be highlighted if desired.
   secondary_text: String; // contains the secondary text of a prediction, usually the location of the place.
 }
-type SFormatting = Array<SFormat>;
+type SFormatting = Array<SFormat>
 
 interface Term {
   offset: Number; // position of term in text
   value: String; // value of term in text
 }
-type Terms = Array<Term>;
+type Terms = Array<Term>
 
 interface Result {
   id: String; // unique id for the search result
@@ -135,5 +45,112 @@ interface Result {
   terms: Terms; // contains an array of terms identifying each section of the returned description (a section of the description is generally terminated with a comma). Each entry in the array has a value field, containing the text of the term, and an offset field, defining the start position of this term in the description, measured in Unicode characters.
   types: Array<String>; // contains an array of types that apply to this place. For example: [ "political", "locality" ] or [ "establishment", "geocode" ].
 }
-type Results = Array<Result>;
-```
+type Results = Array<Result>
+
+/** Class containing methods to get results from Google Places */
+// TODO: add nearby search without input
+export default class GooglePlaces {
+  options: Options
+  /**
+   * Create an instance of the GooglePlaces class.
+   * @param {Options} options
+   *        Options for creating the handler
+   */
+  constructor (options: Options) {
+    this.options = options
+  }
+
+  /**
+   * Make a request expecting a JSON response
+   * @param {String} url
+   *        Request URL for Google Maps
+   * @private
+   */
+  request = (url: String) => new Promise((resolve, reject) => {
+    if (!url || typeof url !== 'string') {
+      reject(new Error('Invalid request URL.'))
+    }
+
+    fetch(url)
+      .then(r => r.json())
+      .then(resolve)
+      .catch(reject)
+  })
+
+  /**
+   * Search for places matching input
+   * @param {String} input
+   *        Input string for the search
+   * @returns {Promise<Results>}
+   *          Returns an unaltered array of results from the Google Places API
+   */
+  search = (input: String) => new Promise<Results>(async (resolve, reject) => {
+    if (!input || typeof input !== 'string') {
+      reject(new Error('Invalid input string given.'))
+    }
+
+    const options = Qs.stringify({
+      input,
+      language: 'en',
+      key: this.options.key,
+      types: 'establishment',
+      ...this.options.query
+    })
+
+    const response = await this.request(
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?${options}`
+      // `https://maps.googleapis.com/maps/api/geocode/json?${options}`
+    ).catch(reject)
+
+    resolve((response || {}).predictions || [])
+  })
+
+  /**
+   * Search for places matching input
+   * @param {String} input
+   *        Input string for the search
+   * @param {Number} radius
+   *        Radius in meters to look for places
+   * @returns {Promise<Results>}
+   *          Returns an unaltered array of results from the Google Places API
+   */
+  searchNearby = (input: String, radius: Number = 1000) => new Promise<Results>(async (resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(async position => {
+      const { latitude, longitude } = (position || {}).coords || {}
+
+      if (!latitude || !longitude) {
+        reject(new Error('No latitude/longtitude for current location found.'))
+      }
+
+      if (!input || typeof input !== 'string') {
+        reject(new Error('Invalid input string given.'))
+      }
+
+      if (!radius || typeof radius !== 'number') {
+        reject(new Error('Invalid radius given.'))
+      }
+
+      const options = Qs.stringify({
+        input,
+        radius,
+        language: 'en',
+        key: this.options.key,
+        types: 'establishment',
+        strictbounds: true,
+        location: `${latitude},${longitude}`,
+        ...this.options.query
+      })
+
+      const response = await this.request(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?${options}`
+        // `https://maps.googleapis.com/maps/api/geocode/json?${options}`
+      ).catch(reject)
+
+      resolve((response || {}).predictions || [])
+    }, reject, {
+      enableHighAccuracy: Platform.OS === 'android',
+      timeout: 10000,
+      maximumAge: 1000
+    })
+  })
+}

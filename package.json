@@ -1,0 +1,22 @@
+{
+  "name": "react-native-google-places",
+  "version": "1.0.0",
+  "description": "React Native library for utilizing Google's Autocomplete for Places.",
+  "main": "index.js",
+  "keywords": [
+    "react",
+    "native",
+    "react-native",
+    "react-native-google-places",
+    "google",
+    "places",
+    "autocomplete",
+    "auto",
+    "complete"
+  ],
+  "peerDependencies": {
+    "qs": "^6.0.0",
+    "prop-types": "^15.0.0 || ^16.0.0"
+  },
+  "author": "Luc Hermkens"
+}
