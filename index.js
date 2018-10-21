@@ -49,10 +49,10 @@ type Results = Array<Result>
 
 /** Class containing methods to get results from Google Places */
 // TODO: add nearby search without input
-export default class GooglePlaces {
+export default class GPlaces {
   options: Options
   /**
-   * Create an instance of the GooglePlaces class.
+   * Create an instance of the GPlaces class.
    * @param {Options} options
    *        Options for creating the handler
    */

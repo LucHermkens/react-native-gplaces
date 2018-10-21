@@ -1,4 +1,4 @@
-# react-native-google-places
+# react-native-gplaces
 
 React Native library for utilizing Google's Autocomplete for Places.
 
@@ -7,13 +7,13 @@ React Native library for utilizing Google's Autocomplete for Places.
 ### using npm
 
 ```sh
-npm install --save react-native-google-places
+npm install --save react-native-gplaces
 ```
 
 ### using yarn
 
 ```sh
-yarn add rn-fetch-blob react-native-google-places
+yarn add rn-fetch-blob react-native-gplaces
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ yarn add rn-fetch-blob react-native-google-places
 The module uses an ES6 style export statement, simply use `import` to load the module.
 
 ```js
-import GooglePlaces from 'react-native-google-places';
+import GPlaces from 'react-native-gplaces';
 ```
 
 ### ES5
@@ -31,7 +31,7 @@ import GooglePlaces from 'react-native-google-places';
 If you're using an ES5 require statement to load the module, please add `default`. See [here](https://github.com/joltup/rn-fetch-blob/wiki/Trouble-Shooting#rnfetchblobfetch-is-not-a-function) for more detail.
 
 ```js
-var GooglePlaces = require('react-native-google-places').default;
+var GPlaces = require('react-native-gplaces').default;
 ```
 
 ## Searching
@@ -42,7 +42,7 @@ This package supports custom queries if you'd like to use them.
 See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for more details.
 
 ```js
-const places = new GooglePlaces({
+const places = new GPlaces({
   key: 'YOUR_API_KEY',
   query: {
     components: 'country:nl|country:be',
