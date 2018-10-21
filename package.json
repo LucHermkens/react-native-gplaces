@@ -15,9 +15,17 @@
     "auto",
     "complete"
   ],
-  "peerDependencies": {
-    "qs": "^6.0.0",
-    "react-native": "^0.51 || ^0.52 || ^0.53 || ^0.54 || ^0.55 || ^0.56 || ^0.57"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucHermkens/react-native-gplaces.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LucHermkens/react-native-gplaces/issues"
+  },
+  "homepage": "https://github.com/LucHermkens/react-native-gplaces#readme",
+  "dependencies": {
+    "qs": "*",
+    "react-native": "*"
   },
   "license": "MIT",
   "author": "Luc Hermkens"
