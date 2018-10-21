@@ -84,7 +84,7 @@ export default class GPlaces {
    * @returns {Promise<Results>}
    *          Returns an unaltered array of results from the Google Places API
    */
-  search = (input: String) => new Promise<Results>(async (resolve, reject) => {
+  search = (input: String) => new Promise(async (resolve, reject) => {
     if (!input || typeof input !== 'string') {
       reject(new Error('Invalid input string given.'))
     }
@@ -114,7 +114,7 @@ export default class GPlaces {
    * @returns {Promise<Results>}
    *          Returns an unaltered array of results from the Google Places API
    */
-  searchNearby = (input: String, radius: Number = 1000) => new Promise<Results>(async (resolve, reject) => {
+  searchNearby = (input: String, radius: Number = 1000) => new Promise(async (resolve, reject) => {
     navigator.geolocation.getCurrentPosition(async position => {
       const { latitude, longitude } = (position || {}).coords || {}
 

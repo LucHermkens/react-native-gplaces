@@ -1,6 +1,6 @@
 {
   "name": "react-native-gplaces",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "React Native library for utilizing Google's Autocomplete for Places.",
   "main": "index.js",
   "keywords": [
