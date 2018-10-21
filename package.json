@@ -23,9 +23,11 @@
     "url": "https://github.com/LucHermkens/react-native-gplaces/issues"
   },
   "homepage": "https://github.com/LucHermkens/react-native-gplaces#readme",
+  "peerDependencies": {
+    "react-native": "^0.51 || ^0.52 || ^0.53 || ^0.54 || ^0.55 || ^0.56 || ^0.57"
+  },
   "dependencies": {
-    "qs": "^6.5.2",
-    "react-native": "^0.54"
+    "qs": "^6.5.2"
   },
   "license": "MIT",
   "author": "Luc Hermkens"
