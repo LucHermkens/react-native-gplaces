@@ -73,9 +73,15 @@ storage.searchNearby(input, radius) // input: 'eindhoven', radius: 1000
 
 ## API
 
-### `request(url: string): Promise<JSONResponse> (@private)`
+### `request(url: string): Promise<any> (@private)`
 
 Calling this method will fetch an URL and return a JSON response
+
+### `autocompleteRequest(options: string): Promise<Results> (@private)`
+
+Calling this method will fetch and return an array of results
+
+<!-- TODO: document default query -->
 
 ### `search(input: string): Promise<Results>`
 
