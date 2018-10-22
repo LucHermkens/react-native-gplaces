@@ -11,19 +11,25 @@ import {
 /** Class containing methods to get results from Google Places */
 // TODO: add nearby search without input
 export default class GPlaces {
+  /** API options */
   options: Options
   /**
    * Create an instance of the GPlaces class.
-   * @param   {Options} options
+   * @param   {Options} [options=]
    *          Options for creating the handler
    */
+  // TODO: give error if no key
   constructor (options: Options) {
-    this.options = options
+    if (!options) {
+      this.options = { key: '' }
+    } else {
+      this.options = options
+    }
   }
 
   /**
    * Make a request expecting a JSON response
-   * @param   {string} url
+   * @param   {string} [url='']
    *          Request URL for Google Maps
    * @private
    */
@@ -42,7 +48,7 @@ export default class GPlaces {
 
   /**
    * Search for places using specified options
-   * @param   {string} options
+   * @param   {string} [options='']
    *          Options string for the API call
    * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
@@ -62,16 +68,16 @@ export default class GPlaces {
 
   /**
    * Search for places matching input
-   * @param   {string} input
+   * @param   {string} [input='']
    *          Input string for the search
-   * @param   {ACQuery} query
+   * @param   {ACQuery} [query=]
    *          Query object for the search
    * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
    */
   search = (
     input: string = '',
-    query: ACQuery = {}
+    query?: ACQuery
   ) => new Promise<ACResults>(async (resolve, reject) => {
     if (!input || typeof input !== 'string') {
       reject(new Error('Invalid input string given.'))
@@ -92,11 +98,11 @@ export default class GPlaces {
 
   /**
    * Search for places matching input
-   * @param   {string} input
+   * @param   {string} [input='']
    *          Input string for the search
-   * @param   {number} radius
+   * @param   {number} [radius=1000]
    *          Radius in meters to look for places
-   * @param   {ACQuery} query
+   * @param   {ACQuery} [query=]
    *          Query object for the search
    * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
@@ -104,7 +110,7 @@ export default class GPlaces {
   searchNearby = (
     input: string = '',
     radius: number = 1000,
-    query: ACQuery = {}
+    query?: ACQuery
   ) => new Promise<ACResults>(async (resolve, reject) => {
     navigator.geolocation.getCurrentPosition(async position => {
       const { latitude = 0, longitude = 0 } = (position || { coords: null, timestamp: null }).coords || {}
@@ -144,14 +150,14 @@ export default class GPlaces {
 
   /**
    * Search for places matching input
-   * @param   {string} placeid
+   * @param   {string} [placeid='']
    *          Place ID string of the requested place
-   * @param   {PDQuery} query
+   * @param   {PDQuery} [query=]
    *          Place ID string of the requested place
    * @returns {Promise<PDResult>}
    *          Returns an unaltered result object from the Google Places API
    */
-  getPlaceDetails = (placeid: string = '', query: PDQuery = {}) => new Promise<PDResult>(async (resolve, reject) => {
+  getPlaceDetails = (placeid: string = '', query?: PDQuery) => new Promise<PDResult>(async (resolve, reject) => {
     if (!placeid || typeof placeid !== 'string') {
       reject(new Error('Invalid Place ID string given.'))
     }

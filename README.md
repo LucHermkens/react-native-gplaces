@@ -43,20 +43,19 @@ See [here](https://developers.google.com/places/web-service/autocomplete#place_a
 
 ```js
 const places = new GPlaces({
-  key: 'YOUR_API_KEY',
-  query: {
-    components: 'country:nl|country:be',
-    types: '(cities)'
-  }
+  key: 'YOUR_GOOGLE_MAPS_API_KEY' // https://developers.google.com/maps/documentation/javascript/get-api-key
 });
 ```
 
 ### Search for places
 
 ```js
-places.search(input) // input: 'eindhoven'
+places.search('nemo', {
+  components: 'country:nl',
+  types: 'establishment'
+})
   .then(r => {
-    // returns Result[]
+    // returns ACResult[]
   })
   .catch(console.error)
 ```
@@ -64,87 +63,162 @@ places.search(input) // input: 'eindhoven'
 ### Search for places nearby
 
 ```js
-storage.searchNearby(input, radius) // input: 'eindhoven', radius: 1000
+places.searchNearby('brussel', 2500, {
+  components: 'country:be',
+  types: '(cities)'
+})
   .then(r => {
-    // returns Result[]
+    // returns ACResult[]
+  })
+  .catch(console.error)
+```
+
+### Get details for a Place
+
+```js
+places.getPlaceDetails('ChIJn8N5VRvZxkcRmLlkgWTSmvM', {
+  fields: 'geometry'
+})
+  .then(r => {
+    // returns PDResult
   })
   .catch(console.error)
 ```
 
 ## API
 
-### `request(url: string): Promise<any> (@private)`
+### `constructor GPlaces(options: Options): GPlaces`
+
+Constructor for creating an instance of the GPlaces class
+
+### `request: (url?: string) => Promise<any> (@private)`
 
 Calling this method will fetch an URL and return a JSON response
 
-### `autocompleteRequest(options: string): Promise<Results> (@private)`
+### `autocompleteRequest: (options?: string) => Promise<ACResult[]> (@private)`
 
 Calling this method will fetch and return an array of results
 
 <!-- TODO: document default query -->
 <!-- TODO: recommend debounce -->
 
-### `search(input: string): Promise<Results>`
+### `search: (input?: string, query?: ACQuery | undefined) => Promise<ACResult[]>`
 
 Calling this method will search for places matching the input.
 
-### `searchNearby(input: string, radius: number): Promise<Results>`
+### `searchNearby: (input?: string, radius?: number, query?: ACQuery | undefined) => Promise<ACResult[]>`
 
 Calling this method will search for nearby places matching the input in a given radius.
 The default radius is 1000m / 1km.
 
-### `getPlaceDetails(placeid: string, query: Query): Promise<Results>`
+### `getPlaceDetails: (placeid?: string, query?: PDQuery | undefined) => Promise<PDResult>`
 
 Calling this method will get certain details for a place based on a query.
 
 ## Types
 
-See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for up-to-date information about queries & results.
+For up-to-date information about Autocomplete queries see [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests), for Place Details queries look [here](https://developers.google.com/places/web-service/details#PlaceDetailsRequests).
 
 ```ts
-interface Query {
-  sessiontoken: string;
-  offset: number;
-  location: string;
-  radius: number;
-  language: string;
-  types: string;
-  components: string;
-  strictbounds: boolean;
-}
-interface Options {
-  key: string;
-  query: Query;
+export interface ACQuery {
+  sessiontoken?: string;
+  offset?: number;
+  location?: string;
+  radius?: number;
+  language?: string;
+  types?: string;
+  components?: string;
+  strictbounds?: boolean;
 }
 
-interface MSubstring {
+export interface PDQuery {
+  language?: string;
+  region?: string;
+  sessiontoken?: string;
+  fields?: string;
+}
+
+export interface Options {
+  key: string;
+}
+
+export interface MSubstring {
   length: number;
   offset: number;
 }
-type MSubstrings = Array<MSubstring>
+export type MSubstrings = Array<MSubstring>
 
-interface SFormat {
+export interface SFormat {
   main_text: string;
   main_text_matched_substrings: MSubstrings;
   secondary_text: string;
 }
-type SFormatting = Array<SFormat>
+export type SFormatting = Array<SFormat>
 
-interface Term {
+export interface Term {
   offset: number;
   value: string;
 }
-type Terms = Array<Term>
+export type Terms = Array<Term>
 
-interface ACResult {
+export interface ACResult {
   id: string;
   place_id: string;
   reference: string;
   description: string;
-  matched_substrings: MSubstring;
+  matched_substrings: MSubstrings;
   structured_formatting: SFormatting;
   terms: Terms;
   types: Array<string>;
 }
-type ACResults = Array<ACResult>
+export type ACResults = Array<ACResult>
+
+export type Types = Array<string>
+export type HTMLAttrs = Array<string>
+
+export interface AddressComponent {
+  long_name: string;
+  short_name: string;
+  types: Types;
+}
+export type AddressComponents = Array<AddressComponent>
+
+export interface Photo {
+  height: number;
+  html_attributions: HTMLAttrs;
+  photo_reference: string;
+  width: number;
+}
+export type Photos = Array<Photo>
+
+export interface Location {
+  lat: string;
+  lng: string;
+}
+export interface Viewport {
+  northeast: Location;
+  southwest: Location;
+}
+export interface Geometry {
+  location: Location;
+  viewport: Viewport;
+}
+
+export interface PDResult {
+  address_components: AddressComponents;
+  adr_address: string;
+  formatted_address: string;
+  geometry: Geometry;
+  icon: string;
+  id: string;
+  name: string;
+  photos: Photos;
+  place_id: string;
+  reference: string;
+  scope: string;
+  types: Types;
+  url: string;
+  utc_offset: number;
+  vicinity: string;
+}
 ```
