@@ -13,7 +13,7 @@ npm install --save react-native-gplaces
 ### using yarn
 
 ```sh
-yarn add rn-fetch-blob react-native-gplaces
+yarn add react-native-gplaces
 ```
 
 ## Usage
