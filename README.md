@@ -82,6 +82,7 @@ Calling this method will fetch an URL and return a JSON response
 Calling this method will fetch and return an array of results
 
 <!-- TODO: document default query -->
+<!-- TODO: recommend debounce -->
 
 ### `search(input: string): Promise<Results>`
 
@@ -92,9 +93,13 @@ Calling this method will search for places matching the input.
 Calling this method will search for nearby places matching the input in a given radius.
 The default radius is 1000m / 1km.
 
+### `getPlaceDetails(placeid: string, query: Query): Promise<Results>`
+
+Calling this method will get certain details for a place based on a query.
+
 ## Types
 
-See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for up-to-date information.
+See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for up-to-date information about queries & results.
 
 ```ts
 interface Query {
