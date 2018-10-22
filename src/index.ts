@@ -71,7 +71,7 @@ interface ACResult {
   /** contains the human-readable name for the returned result (for establishment results, this is usually the business name) */
   description: string;
   /** contains an array with offset value and length */
-  matched_substrings: MSubstring;
+  matched_substrings: MSubstrings;
   /** contains the following subfields: main_text, main_text_matched_substrings, secondary_text */
   structured_formatting: SFormatting;
   /** contains an array of terms identifying each section of the returned description */
