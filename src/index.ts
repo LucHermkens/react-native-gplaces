@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import * as Qs from 'qs'
 
+/** Autocomplete Query */
 interface Query {
   /** A random string which identifies an autocomplete session for billing purposes. If this parameter is omitted from an autocomplete request, the request is billed independently. See the pricing sheet for details. */
   sessiontoken: string;
@@ -19,6 +20,7 @@ interface Query {
   /** Returns only those places that are strictly within the region defined by location and radius. This is a restriction, rather than a bias, meaning that results outside this region will not be returned even if they match the user input. */
   strictbounds: boolean;
 }
+/** API Options */
 interface Options {
   /** Your application's API key. This key identifies your application for purposes of quota management. See Get a key for more information. Google Maps APIs Premium Plan customers must use the API project created for them as part of their Premium Plan purchase. */
   key: string;
@@ -26,14 +28,17 @@ interface Options {
   query: Query;
 }
 
+/** Matched Substring */
 interface MSubstring {
   /** length of substring in text */
   length: number;
   /** position of substring in text */
   offset: number;
 }
+/** Matched Substrings */
 type MSubstrings = Array<MSubstring>
 
+/** Structured Format */
 interface SFormat {
   /** contains the main text of a prediction, usually the name of the place */
   main_text: string;
@@ -42,17 +47,21 @@ interface SFormat {
   /** contains the secondary text of a prediction, usually the location of the place */
   secondary_text: string;
 }
+/** Structured Formatting */
 type SFormatting = Array<SFormat>
 
+/** Term */
 interface Term {
   /** position of term in text */
   offset: number;
   /** value of term in text */
   value: string;
 }
+/** Terms */
 type Terms = Array<Term>
 
-interface Result {
+/** Autocomplete Result */
+interface ACResult {
   /** unique id for the search result */
   id: string;
   /** textual identifier that uniquely identifies a place */
@@ -70,7 +79,28 @@ interface Result {
   /** contains an array of types that apply to this place (for example: ["political", "locality"] or ["establishment", "geocode"]) */
   types: Array<string>;
 }
-type Results = Array<Result>
+/** Autocomplete Results */
+type ACResults = Array<ACResult>
+
+/** Place Details Result */
+interface PDResult {
+  /** unique id for the search result */
+  id: string;
+  /** textual identifier that uniquely identifies a place */
+  place_id: string;
+  /** same as place_id */
+  reference: string;
+  /** contains the human-readable name for the returned result (for establishment results, this is usually the business name) */
+  description: string;
+  /** contains an array with offset value and length */
+  matched_substrings: MSubstring;
+  /** contains the following subfields: main_text, main_text_matched_substrings, secondary_text */
+  structured_formatting: SFormatting;
+  /** contains an array of terms identifying each section of the returned description */
+  terms: Terms;
+  /** contains an array of types that apply to this place (for example: ["political", "locality"] or ["establishment", "geocode"]) */
+  types: Array<string>;
+}
 
 /** Class containing methods to get results from Google Places */
 // TODO: add nearby search without input
@@ -106,13 +136,16 @@ export default class GPlaces {
    * Search for places using specified options
    * @param   {string} options
    *          Options string for the API call
-   * @returns {Promise<Results>}
+   * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
    */
-  autocompleteRequest = (options: string = '') => new Promise<Results>((resolve, reject) => {
+  autocompleteRequest = (options: string = '') => new Promise<ACResults>((resolve, reject) => {
     this.request(`https://maps.googleapis.com/maps/api/place/autocomplete/json?${options}`)
       .then(res => {
-        resolve((res || { predictions: null }).predictions || [])
+        if (!res || !res.predictions || !Array.isArray(res.predictions)) {
+          return reject(new Error('Invalid response from server'))
+        }
+        resolve(res.predictions)
       })
       .catch(reject)
   })
@@ -121,10 +154,10 @@ export default class GPlaces {
    * Search for places matching input
    * @param   {string} input
    *          Input string for the search
-   * @returns {Promise<Results>}
+   * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
    */
-  search = (input: string = '') => new Promise<Results>(async (resolve, reject) => {
+  search = (input: string = '') => new Promise<ACResults>(async (resolve, reject) => {
     if (!input || typeof input !== 'string') {
       reject(new Error('Invalid input string given.'))
     }
@@ -148,10 +181,10 @@ export default class GPlaces {
    *          Input string for the search
    * @param   {number} radius
    *          Radius in meters to look for places
-   * @returns {Promise<Results>}
+   * @returns {Promise<ACResults>}
    *          Returns an unaltered array of results from the Google Places API
    */
-  searchNearby = (input: string = '', radius: number = 1000) => new Promise<Results>(async (resolve, reject) => {
+  searchNearby = (input: string = '', radius: number = 1000) => new Promise<ACResults>(async (resolve, reject) => {
     navigator.geolocation.getCurrentPosition(async position => {
       const { latitude = 0, longitude = 0 } = (position || { coords: null, timestamp: null }).coords || {}
 
