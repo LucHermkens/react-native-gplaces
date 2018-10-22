@@ -82,26 +82,6 @@ interface ACResult {
 /** Autocomplete Results */
 type ACResults = Array<ACResult>
 
-/** Place Details Result */
-interface PDResult {
-  /** unique id for the search result */
-  id: string;
-  /** textual identifier that uniquely identifies a place */
-  place_id: string;
-  /** same as place_id */
-  reference: string;
-  /** contains the human-readable name for the returned result (for establishment results, this is usually the business name) */
-  description: string;
-  /** contains an array with offset value and length */
-  matched_substrings: MSubstring;
-  /** contains the following subfields: main_text, main_text_matched_substrings, secondary_text */
-  structured_formatting: SFormatting;
-  /** contains an array of terms identifying each section of the returned description */
-  terms: Terms;
-  /** contains an array of types that apply to this place (for example: ["political", "locality"] or ["establishment", "geocode"]) */
-  types: Array<string>;
-}
-
 /** Class containing methods to get results from Google Places */
 // TODO: add nearby search without input
 export default class GPlaces {
