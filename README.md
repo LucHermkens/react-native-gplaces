@@ -16,7 +16,7 @@ npm install --save react-native-gplaces
 yarn add react-native-gplaces
 ```
 
-## Usage
+## Importing
 
 ### ES6
 
@@ -28,18 +28,19 @@ import GPlaces from 'react-native-gplaces';
 
 ### ES5
 
-If you're using an ES5 require statement to load the module, please add `default`. See [here](https://github.com/joltup/rn-fetch-blob/wiki/Trouble-Shooting#rnfetchblobfetch-is-not-a-function) for more detail.
+If you're using an ES5 require statement to load the module, please add `default`. Look [here](https://github.com/joltup/rn-fetch-blob/wiki/Trouble-Shooting#rnfetchblobfetch-is-not-a-function) for more detail.
 
 ```js
 var GPlaces = require('react-native-gplaces').default;
 ```
 
-## Searching
+## Usage
+
+This package supports custom queries if you'd like to use them. For searching queries look [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) and queries for getting places look [here](https://developers.google.com/places/web-service/details#PlaceDetailsRequests).
 
 ### Creating an instance
 
-This package supports custom queries if you'd like to use them.
-See [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests) for more details.
+You can obtain a Google API key [here](https://developers.google.com/maps/documentation/javascript/get-api-key).
 
 ```js
 const places = new GPlaces({
@@ -117,7 +118,7 @@ Calling this method will get certain details for a place based on a query.
 
 ## Types
 
-For up-to-date information about Autocomplete queries see [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests), for Place Details queries look [here](https://developers.google.com/places/web-service/details#PlaceDetailsRequests).
+For up-to-date information about Autocomplete queries look [here](https://developers.google.com/places/web-service/autocomplete#place_autocomplete_requests), for Place Details queries look [here](https://developers.google.com/places/web-service/details#PlaceDetailsRequests).
 
 ```ts
 export interface ACQuery {
