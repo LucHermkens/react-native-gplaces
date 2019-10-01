@@ -1,11 +1,11 @@
 {
   "name": "react-native-gplaces",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "React Native library for utilizing Google's Autocomplete for Places.",
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "prepare" : "npm run build",
+    "prepare": "npm run build",
     "build": "tsc"
   },
   "keywords": [
@@ -29,16 +29,18 @@
   },
   "homepage": "https://github.com/LucHermkens/react-native-gplaces#readme",
   "peerDependencies": {
-    "react-native": "^0.51 || ^0.52 || ^0.53 || ^0.54 || ^0.55 || ^0.56 || ^0.57"
+    "@react-native-community/geolocation": "^2",
+    "react-native": "*"
   },
   "dependencies": {
-    "qs": "^6.5.2"
+    "qs": "^6.9.0"
   },
   "license": "MIT",
   "author": "Luc Hermkens",
   "devDependencies": {
-    "@types/qs": "^6.5.1",
-    "@types/react-native": "^0.57.7",
-    "typescript": "^3.1.3"
+    "@types/qs": "^6.5.3",
+    "@types/react-native": "^0.60.17",
+    "@react-native-community/geolocation": "^2.0.2",
+    "typescript": "^3.6.3"
   }
 }

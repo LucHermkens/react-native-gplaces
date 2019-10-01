@@ -4,16 +4,18 @@ React Native library for utilizing Google's Autocomplete for Places.
 
 ## Install
 
+**Notice**: Geolocation must be linked, in React Native 0.60+ this is done automatically.
+
 ### using npm
 
 ```sh
-npm install --save react-native-gplaces
+npm install --save react-native-gplaces @react-native-community/geolocation
 ```
 
 ### using yarn
 
 ```sh
-yarn add react-native-gplaces
+yarn add react-native-gplaces @react-native-community/geolocation
 ```
 
 ## Importing

@@ -1,4 +1,6 @@
 import { Platform } from 'react-native'
+import Geolocation from '@react-native-community/geolocation'
+import { GeolocationResponse } from '@react-native-community/geolocation/typings'
 import * as Qs from 'qs'
 import {
   ACQuery,
@@ -112,7 +114,7 @@ export default class GPlaces {
     radius: number = 1000,
     query?: ACQuery
   ) => new Promise<ACResults>(async (resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(async position => {
+    Geolocation.getCurrentPosition(async (position: GeolocationResponse) => {
       const { latitude = 0, longitude = 0 } = (position || { coords: null, timestamp: null }).coords || {}
 
       if (!latitude || !longitude) {
